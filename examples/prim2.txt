@@ -1,0 +1,40 @@
+# program za testiranje iinput naredbe - traži početni broj dok se ne unese ispravan integer te ispisuje sljedećih 5 brojeva
+
+@pocetak:	load r3, @unesite	; konstanta za prompt
+			echo r3				; ispiši konstantu za prompt
+			iinput @unos		; spremi unos na rezerviranu memorijsku lokaciju
+			jumpIfTrue @nastavak; ako se unos može protumačiti kao integer, nastavi
+			load r3, @kriviUnos
+			echo r3				; inače ispiši da je krivi unos
+			jump @pocetak		; i vrati se na početak
+@nastavak:	call @ispisi
+			halt
+
+
+# potprogram za ispisivanje sljedećih 5 brojeva od zadanog unosa
+@ispisi:	load r3, @sljedecih	; učitaj konstantu za ispis brojeva
+			echo r3				; ispiši tu konstantu
+			move r1, 5			; inicijaliziraj brojač
+			move r2, 0			; spremi konstantu 0
+			load r0, @unos		; učitaj unos iz memorije
+@petlja:	increment r0		; inkrementiraj unos
+			decrement r1		; dekrementiraj brojač
+			echo r0				; ispiši inkrement broja
+			load r3, @enter
+			echo r3
+			testEquals r1, r2	; postavi zastavicu
+			jumpIfTrue @kraj	; ako je brojač 0, završi potprogram
+			jump @petlja		; inače iteriraj dalje
+@kraj:		ret
+
+
+# konstane u memoriji
+@enter:		DEFSTR "\n"
+@unesite:	DEFSTR "Unesite početni broj: "
+@kriviUnos:	DEFSTR "Unos nije moguće protumačiti kao cijeli broj.\n"
+@sljedecih:	DEFSTR "Sljedećih 5 brojeva je:\n"
+
+@unos:		RESERVE				; rezerviramo 1 lokaciju za korisnikov unos
+
+			RESERVE:9			; rezerviramo 9 lokacija u memoriji
+@stackTop:	RESERVE				; rezerviramo još jednu, ukupno 10 lokacija; ova postaje vrh stoga

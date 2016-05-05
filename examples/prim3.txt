@@ -1,0 +1,56 @@
+# program za računanje n fibonaccijevih brojeva rekurzivno
+
+@pocetak:	load r3, @unesite	; konstanta za prompt
+			echo r3				; ispiši konstantu za prompt
+			iinput @brojac		; spremi unos kao brojac na rezerviranu memorijsku lokaciju
+			jumpIfTrue @nastavak; ako se brojac može protumačiti kao integer, nastavi
+			load r3, @kriviUnos
+			echo r3				; inače ispiši da je krivi unos
+			jump @pocetak		; i vrati se na početak
+
+@nastavak:	load r5, @brojac	; učitaj brojač
+			move r6, 0			; spremi konstantu 0
+			load r0, @nulti		; učitaj nulti u registar
+			load r1, @prvi		; učitaj prvi u registar
+			load r3, @brPrije
+			echo r3
+			call @fibonacci
+
+@ispisN:	load r3, @enter
+			echo r3
+			load r3, @brN
+			echo r3
+			echo r0
+			halt
+
+
+# potprogram za rekurzivno računanje fibonaccijevih brojeva
+@fibonacci:	testEquals r5, r6	; postavi zastavicu ako je brojač 0
+			jumpIfTrue @kraj	; ako je brojač 0, završi potprogram
+
+			echo r0				; ispiši prethodni (uvijek se taj ispisuje)
+			decrement r5		; dekrementiraj brojač
+			load r3, @razmak
+			echo r3
+			add r4, r0, r1		; učitaj iduću vrijednost u privremeni registar
+			move r0, r1			; postavi prethodni na vrijednost trenutnog
+			move r1, r4			; postavi trenutni na izračunatu vrijednost
+			call @fibonacci		; inače idi u rekurziju
+@kraj:		ret
+
+
+# konstane u memoriji
+@prvi:		DEFINT 1			; F[1]
+@nulti:		DEFINT 0			; F[0]
+
+@enter:		DEFSTR "\n"
+@razmak:	DEFSTR " "
+@unesite:	DEFSTR "Unesite cijeli broj n: "
+@kriviUnos:	DEFSTR "Unos nije moguće protumačiti kao cijeli broj.\n"
+@brPrije:	DEFSTR "Brojevi koji prethode n-tom: "
+@brN:		DEFSTR "n-ti broj u fibonaccijevom slijedu: "
+
+@brojac:	RESERVE				; rezerviramo 1 lokaciju za korisnikov unos koji će biti brojač
+
+			RESERVE:199			; rezerviramo 199 lokacija u memoriji
+@stackTop:	RESERVE				; rezerviramo još jednu, ukupno 200 lokacija; ova postaje vrh stoga

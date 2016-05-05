@@ -1,0 +1,6 @@
+# primjer za zadatak 1.2.3. - ispiši poruku "Hello world" na ekran
+		load r7, @poruka	; ucitaj poruku u r7
+		echo r7				; ispisi na konzolu poruku
+		halt				; zaustavi procesor
+
+@poruka: DEFSTR "Hello world!\n"

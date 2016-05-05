@@ -1,0 +1,159 @@
+# program za cjelobrojno dijeljenje pozitivnih brojeva uzastopnim oduzimanjem te ispisa rezultata na ekran
+
+@init:		move r10, 0			; ovo je vječita konstanta za nulu
+			move r11, 1			; ovo je vječita konstanta za jedinici
+			move r12, 2			; ovo je vječita konstanta za dvojku
+			move r14, @razmak	; ovo je vječita konstanta za razmak
+
+@unos1:		load r3, @unesite1
+			echo r3				; ispiši prompt za prvi operand
+			iinput @op1			; spremi operand 1
+			jumpIfTrue @unos2	; ako se unos može protumačiti kao integer, nastavi
+
+			load r3, @kriviUnos
+			echo r3				; inače ispiši da je krivi unos
+			jump @unos1			; i skoči natrag
+
+@unos2:		load r3, @unesite2
+			echo r3				; ispiši prompt za drugi operand
+			iinput @op2			; spremi operand 2
+			jumpIfTrue @obavi	; ako se unos može protumačiti kao integer, nastavi
+
+			load r3, @kriviUnos
+			echo r3				; inače ispiši da je krivi unos
+			jump @unos2			; i skoči natrag
+
+@obavi:		call @div			; podijeli brojeve
+
+			load r3, @rezStr
+			echo r3				; ispiši "Rezultat: "
+			move r0, @rezultat	; dohvati adresu rezultata
+			echo [r0]			; ispiši rezultat
+
+			load r3, @enter
+			echo r3				; enter
+
+			load r3, @ostStr
+			echo r3				; ispiši "Ostatak: "
+			move r0, @ostatak	; dohvati adresu ostatka
+			echo [r0]			; ispiši ostatak
+
+			halt
+
+# potprogram za dijeljenje uzastopnim oduzimanjem, uzima operande sa @op1 i @op2 i posprema rezultat u @rezultat te ostatak u @ostatak
+@div:		push r0				; spremi kontekst
+			push r1
+			push r2
+			push r5
+			push r6
+
+			load r1, @op1		; učitaj operand 1 iz memorije
+			load r2, @op2		; učitaj operand 2 iz memorije
+			move r0, 0			; registar za rezultat
+
+@divloop:	increment r0		; pribrajaj rezultatu
+
+			# oduzimanje r1 = r1 - r2
+			push r1
+			push r2				; spremi operande na stog za sub potprogram
+			call @sub			; oduzmi operande (rezultat se dobije preko r5)
+			add	r15, r12, r15	; očisti prošla 2 operanda sa stoga
+			move r1, r5			; spremi r5 rezultat koji je vratio sub potprogram: r1 = r1 - r2; smanjuj djeljenik
+
+			# testiranje je li djeljenik (r1) postao negativan
+			push r1				; spremi broj r1 na stog za testNeg potprogram
+			push r2				; spremi minimalnu vrijednost testiranja na stog za testNeg potprogram
+			call @testNeg		; testiraj je li r1 negativan (rezultat se dobije preko r5)
+			add	r15, r12, r15	; očisti prošla 2 operanda sa stoga
+			testEquals r5, r11	; ako je djeljenik negativan (postavljen na 1)
+			jumpIfTrue @negativ ; vrati na pozitivnu vrijednost, zapiši ostatak i idi van
+
+			# testiranje je li djeljenik (r1) nula
+			testEquals r1, r10
+			jumpIfTrue @van 	; ako je djeljenik 0 idi van
+
+			jump @divloop		; inače oduzimaj dalje
+
+@negativ:	add r1, r1, r2		; ostatak se sada nalazi u r1
+			decrement r0		; umanji rezultat dijeljenja za 1, jer je bio negativan
+
+@van:		move r6, @rezultat	; dohvati adresu za spremanje rezultata
+			move [r6], r0		; spremi rezultat
+			move r6, @ostatak	; dohvati adresu za spremanje ostatka
+			move [r6], r1		; spremi ostatak
+
+			pop r6
+			pop r5
+			pop r2
+			pop r1
+			pop r0				; povrati kontekst
+			ret
+
+
+# potprogram za oduzimanje dvaju brojeva, prima operande preko stoga (op1 prvi, op2 drugi) te vraća rezulat u registru r5
+@sub:		push r1				; spremi kontekst
+			push r2				; ovime smo napunili stog za još 2 mjesta
+
+			# offset prilikom učitavanja: offset od 1 mjesta zbog pomaknute kazaljke + 2 mjesta zbog konteksta + 1 mjesto zbog pc
+			move r1, [r15+5]	; učitaj op1 sa stoga, sveukupni offset + 1 mjesto zbog op2
+			move r2, [r15+4]	; učitaj op2 sa stoga, sveukupni offset
+
+@subloop:	testEquals r2, r10	; je li brojač 0?
+			jumpIfTrue @gotovo	; ako je, oduzimanje je gotovo
+
+			decrement r1		; oduzmi 1 od op1
+			decrement r2		; dekrementiraj brojač
+			jump @subloop
+
+@gotovo:	move r5, r1			; rezultat spremamo u r5
+			pop r2
+			pop r1				; povrati kontekst
+			ret
+
+# potprogram za testiranje je li broj negativan, prima broj te minimalnu vrijednost testiranja preko stoga i vraća rezulat u registru r5 (1 ako je, 0 ako nije)
+@testNeg:	push r1				; spremi kontekst
+			push r2
+			push r3				; ovime smo napunili stog za još 3 mjesta
+
+			move r3, 0			; učitaj nulu pa ćeš nju dekrementirat svaki put sve do -r2
+			move r5, 0			; ova nula predstavlja rezultat uz pretpostavku da broj nije negativan, stoga 0 (false)
+
+			# offset prilikom učitavanja: offset od 1 mjesta zbog pomaknute kazaljke + 3 mjesta zbog konteksta + 1 mjesto zbog pc
+			move r1, [r15+6]	; učitaj broj sa stoga, sveukupni offset + 1 mjesto zbog ovog dole
+			move r2, [r15+5]	; učitaj apsolutni iznos minimalne vrijednosti testiranja sa stoga, sveukupni offset
+
+@negloop:	decrement r3
+			testEquals r3, r1	; ako su brojevi jednaki, to znači da je predani broj (r1) negativan
+			jumpIfTrue @postavi	; i zato postavi zastavicu
+
+			decrement r2		; inače umanji onu minimalnu vrijednost, znaš
+			testEquals r10, r2	; ako je r2 dosegao nulu
+			jumpIfTrue @kraj	; onda brojevi nisu jednaki
+
+			jump @negloop		; inače skači na petlju
+
+@postavi:	move r5, 1			; ovo znači da je broj negativan
+
+@kraj:		pop r3
+			pop r2
+			pop r1				; povrati kontekst
+			ret
+
+# konstane u memoriji
+@op1:		RESERVE
+@op2:		RESERVE
+@rezultat:	RESERVE
+@ostatak:	RESERVE
+
+@unesite1:	DEFSTR "Unesite prvi operand (djeljenik): "
+@unesite2:	DEFSTR "Unesite drugi operand (djelitelj): "
+@kriviUnos:	DEFSTR "Unos nije moguće protumačiti kao cijeli broj.\n"
+
+@rezStr:	DEFSTR "Rezultat: "
+@ostStr:	DEFSTR "Ostatak: "
+
+@razmak:	DEFSTR " "
+@enter:		DEFSTR "\n"
+
+			RESERVE:49			; rezerviramo 49 lokacija u memoriji
+@stackTop:	RESERVE				; rezerviramo još jednu, ukupno 50 lokacija; ova postaje vrh stoga

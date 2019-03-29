@@ -29,53 +29,53 @@ import hr.fer.zemris.java.simplecomp.models.InstructionArgument;
  */
 public class InstrIinput extends AbstractInstruction {
 
-	/** The memory location to which integer is stored. */
-	private int memoryLocation;
-	
-	/**
-	 * Constructs an instance of {@code InstrIinput} with the specified
-	 * {@link InstructionArgument arguments}.
-	 * <p>
-	 * Throws an {@linkplain IllegalArgumentException} if the number of
-	 * arguments is different from <tt>1</tt> or the argument is not a
-	 * number (location).
-	 * 
-	 * @param arguments arguments of this instruction
-	 * @throws IllegalArgumentException if argument size or number is invalid
-	 */
-	public InstrIinput(List<InstructionArgument> arguments) {
-		super("Iinput");
-		checkSize(arguments, 1);
-		
-		checkNumber(arguments.get(0), 0);
-		memoryLocation = (Integer) arguments.get(0).getValue();
-	}
+    /** The memory location to which integer is stored. */
+    private int memoryLocation;
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws IllegalStateException if the input stream is closed
-	 */
-	@Override
-	public boolean execute(Computer computer) {
-		try {
-			// The input stream must NOT be closed.
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-			
-			String line = reader.readLine();
-			if (line == null) {
-				throw new IllegalStateException("Input stream closed.");
-			}
-			
-			int num = Integer.parseInt(line);
-			
-			computer.getMemory().setLocation(memoryLocation, num);
-			computer.getRegisters().setFlag(true);
-		} catch (IOException | NumberFormatException e) {
-			computer.getRegisters().setFlag(false);
-		}
-		
-		return false;
-	}
+    /**
+     * Constructs an instance of {@code InstrIinput} with the specified
+     * {@link InstructionArgument arguments}.
+     * <p>
+     * Throws an {@linkplain IllegalArgumentException} if the number of
+     * arguments is different from <tt>1</tt> or the argument is not a
+     * number (location).
+     *
+     * @param arguments arguments of this instruction
+     * @throws IllegalArgumentException if argument size or number is invalid
+     */
+    public InstrIinput(List<InstructionArgument> arguments) {
+        super("Iinput");
+        checkSize(arguments, 1);
+
+        checkNumber(arguments.get(0), 0);
+        memoryLocation = (Integer) arguments.get(0).getValue();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalStateException if the input stream is closed
+     */
+    @Override
+    public boolean execute(Computer computer) {
+        try {
+            // The input stream must NOT be closed.
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+            String line = reader.readLine();
+            if (line == null) {
+                throw new IllegalStateException("Input stream closed.");
+            }
+
+            int num = Integer.parseInt(line);
+
+            computer.getMemory().setLocation(memoryLocation, num);
+            computer.getRegisters().setFlag(true);
+        } catch (IOException | NumberFormatException e) {
+            computer.getRegisters().setFlag(false);
+        }
+
+        return false;
+    }
 
 }

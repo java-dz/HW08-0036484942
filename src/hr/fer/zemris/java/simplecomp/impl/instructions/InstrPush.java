@@ -24,49 +24,49 @@ import hr.fer.zemris.java.simplecomp.models.Registers;
  */
 public class InstrPush extends AbstractInstruction {
 
-	/** The index of the register from which the value will be pushed. */
-	private int registerIndex;
-	
-	/**
-	 * Constructs an instance of {@code InstrPush} with the specified
-	 * {@link InstructionArgument arguments}.
-	 * <p>
-	 * Throws an {@linkplain IllegalArgumentException} if the number of
-	 * arguments is different from <tt>1</tt> or the argument is not a
-	 * regular non-indirect register.
-	 * 
-	 * @param arguments arguments of this instruction
-	 * @throws IllegalArgumentException if argument size or register is invalid
-	 */
-	public InstrPush(List<InstructionArgument> arguments) {
-		super("Push");
-		checkSize(arguments, 1);
-		
-		checkNonIndirectRegister(arguments.get(0), 0);
-		registerIndex = RegisterUtil.getRegisterIndex((Integer) arguments.get(0).getValue());
-	}
+    /** The index of the register from which the value will be pushed. */
+    private int registerIndex;
 
-	@Override
-	public boolean execute(Computer computer) {
-		Object value = computer.getRegisters().getRegisterValue(registerIndex);
-		push(computer, value);
-		
-		return false;
-	}
-	
-	/**
-	 * Does the <i>pushing</i> work of the instruction. Pushes the specified
-	 * <tt>value</tt> to the stack register of the specified <tt>computer</tt>.
-	 * 
-	 * @param computer computer that holds the stack register
-	 * @param value value to be pushed onto the stack
-	 */
-	protected static void push(Computer computer, Object value) {
-		int location = (Integer) computer.getRegisters().getRegisterValue(Registers.STACK_REGISTER_INDEX);
-		computer.getMemory().setLocation(location, value);
-		
-		// move stack pointer for 1 address down
-		computer.getRegisters().setRegisterValue(Registers.STACK_REGISTER_INDEX, location-1);
-	}
+    /**
+     * Constructs an instance of {@code InstrPush} with the specified
+     * {@link InstructionArgument arguments}.
+     * <p>
+     * Throws an {@linkplain IllegalArgumentException} if the number of
+     * arguments is different from <tt>1</tt> or the argument is not a
+     * regular non-indirect register.
+     *
+     * @param arguments arguments of this instruction
+     * @throws IllegalArgumentException if argument size or register is invalid
+     */
+    public InstrPush(List<InstructionArgument> arguments) {
+        super("Push");
+        checkSize(arguments, 1);
+
+        checkNonIndirectRegister(arguments.get(0), 0);
+        registerIndex = RegisterUtil.getRegisterIndex((Integer) arguments.get(0).getValue());
+    }
+
+    @Override
+    public boolean execute(Computer computer) {
+        Object value = computer.getRegisters().getRegisterValue(registerIndex);
+        push(computer, value);
+
+        return false;
+    }
+
+    /**
+     * Does the <i>pushing</i> work of the instruction. Pushes the specified
+     * <tt>value</tt> to the stack register of the specified <tt>computer</tt>.
+     *
+     * @param computer computer that holds the stack register
+     * @param value value to be pushed onto the stack
+     */
+    protected static void push(Computer computer, Object value) {
+        int location = (Integer) computer.getRegisters().getRegisterValue(Registers.STACK_REGISTER_INDEX);
+        computer.getMemory().setLocation(location, value);
+
+        // move stack pointer for 1 address down
+        computer.getRegisters().setRegisterValue(Registers.STACK_REGISTER_INDEX, location-1);
+    }
 
 }

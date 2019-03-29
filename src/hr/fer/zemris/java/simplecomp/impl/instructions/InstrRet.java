@@ -20,32 +20,32 @@ import hr.fer.zemris.java.simplecomp.models.InstructionArgument;
  * @see InstrCall
  */
 public class InstrRet extends AbstractInstruction {
-	
-	/**
-	 * Constructs an instance of {@code InstrRet} with the specified
-	 * {@link InstructionArgument arguments}.
-	 * <p>
-	 * Throws an {@linkplain IllegalArgumentException} if the number of
-	 * arguments is different from <tt>0</tt>.
-	 * 
-	 * @param arguments arguments of this instruction
-	 * @throws IllegalArgumentException if argument size is invalid
-	 */
-	public InstrRet(List<InstructionArgument> arguments) {
-		super("Ret");
-		checkSize(arguments, 0);
-	}
 
-	@Override
-	public boolean execute(Computer computer) {
-		Object pc = InstrPop.pop(computer);
-		if (!(pc instanceof Integer)) {
-			throw new IllegalStateException("Return value must be a number!");
-		}
-		
-		computer.getRegisters().setProgramCounter((Integer) pc);
-		
-		return false;
-	}
+    /**
+     * Constructs an instance of {@code InstrRet} with the specified
+     * {@link InstructionArgument arguments}.
+     * <p>
+     * Throws an {@linkplain IllegalArgumentException} if the number of
+     * arguments is different from <tt>0</tt>.
+     *
+     * @param arguments arguments of this instruction
+     * @throws IllegalArgumentException if argument size is invalid
+     */
+    public InstrRet(List<InstructionArgument> arguments) {
+        super("Ret");
+        checkSize(arguments, 0);
+    }
+
+    @Override
+    public boolean execute(Computer computer) {
+        Object pc = InstrPop.pop(computer);
+        if (!(pc instanceof Integer)) {
+            throw new IllegalStateException("Return value must be a number!");
+        }
+
+        computer.getRegisters().setProgramCounter((Integer) pc);
+
+        return false;
+    }
 
 }

@@ -19,25 +19,25 @@ import hr.fer.zemris.java.simplecomp.models.InstructionArgument;
  * @see InstrIncrement
  */
 public class InstrDecrement extends AbstractInstrUnaryOperation {
-	
-	/**
-	 * Constructs an instance of {@code InstrDecrement} with the specified
-	 * {@link InstructionArgument arguments}.
-	 * <p>
-	 * Throws an {@linkplain IllegalArgumentException} if the number of
-	 * arguments is different from <tt>1</tt> or the argument is not a regular
-	 * non-indirect register.
-	 * 
-	 * @param arguments arguments of this instruction
-	 * @throws IllegalArgumentException if argument size or register is invalid
-	 */
-	public InstrDecrement(List<InstructionArgument> arguments) {
-		super(arguments, "Decrement");
-	}
-	
-	@Override
-	protected int apply(int n) {
-		return n-1;
-	}
+
+    /**
+     * Constructs an instance of {@code InstrDecrement} with the specified
+     * {@link InstructionArgument arguments}.
+     * <p>
+     * Throws an {@linkplain IllegalArgumentException} if the number of
+     * arguments is different from <tt>1</tt> or the argument is not a regular
+     * non-indirect register.
+     *
+     * @param arguments arguments of this instruction
+     * @throws IllegalArgumentException if argument size or register is invalid
+     */
+    public InstrDecrement(List<InstructionArgument> arguments) {
+        super(arguments, "Decrement");
+    }
+
+    @Override
+    protected int apply(int n) {
+        return n-1;
+    }
 
 }

@@ -18,24 +18,24 @@ import hr.fer.zemris.java.simplecomp.models.InstructionArgument;
  */
 public class InstrHalt extends AbstractInstruction {
 
-	/**
-	 * Constructs an instance of {@code InstrHalt} with the specified
-	 * {@link InstructionArgument arguments}.
-	 * <p>
-	 * Throws an {@linkplain IllegalArgumentException} if the number of
-	 * arguments is different from <tt>0</tt>.
-	 * 
-	 * @param arguments arguments of this instruction
-	 * @throws IllegalArgumentException if argument size is invalid
-	 */
-	public InstrHalt(List<InstructionArgument> arguments) {
-		super("Halt");
-		checkSize(arguments, 0);
-	}
-	
-	@Override
-	public boolean execute(Computer computer) {
-		return true;
-	}
+    /**
+     * Constructs an instance of {@code InstrHalt} with the specified
+     * {@link InstructionArgument arguments}.
+     * <p>
+     * Throws an {@linkplain IllegalArgumentException} if the number of
+     * arguments is different from <tt>0</tt>.
+     *
+     * @param arguments arguments of this instruction
+     * @throws IllegalArgumentException if argument size is invalid
+     */
+    public InstrHalt(List<InstructionArgument> arguments) {
+        super("Halt");
+        checkSize(arguments, 0);
+    }
+
+    @Override
+    public boolean execute(Computer computer) {
+        return true;
+    }
 
 }

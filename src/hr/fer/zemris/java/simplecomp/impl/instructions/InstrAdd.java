@@ -22,24 +22,24 @@ import hr.fer.zemris.java.simplecomp.models.InstructionArgument;
  */
 public class InstrAdd extends AbstractInstrArithmeticOperation {
 
-	/**
-	 * Constructs an instance of {@code InstrAdd} with the specified
-	 * {@link InstructionArgument arguments}.
-	 * <p>
-	 * Throws an {@linkplain IllegalArgumentException} if the number of
-	 * arguments is different from <tt>3</tt> or all of the arguments are not
-	 * regular non-indirect registers.
-	 * 
-	 * @param arguments arguments of this instruction
-	 * @throws IllegalArgumentException if argument size or registers are invalid
-	 */
-	public InstrAdd(List<InstructionArgument> arguments) {
-		super(arguments, "Add");
-	}
+    /**
+     * Constructs an instance of {@code InstrAdd} with the specified
+     * {@link InstructionArgument arguments}.
+     * <p>
+     * Throws an {@linkplain IllegalArgumentException} if the number of
+     * arguments is different from <tt>3</tt> or all of the arguments are not
+     * regular non-indirect registers.
+     *
+     * @param arguments arguments of this instruction
+     * @throws IllegalArgumentException if argument size or registers are invalid
+     */
+    public InstrAdd(List<InstructionArgument> arguments) {
+        super(arguments, "Add");
+    }
 
-	@Override
-	protected int apply(int n1, int n2) {
-		return n1 + n2;
-	}
+    @Override
+    protected int apply(int n1, int n2) {
+        return n1 + n2;
+    }
 
 }

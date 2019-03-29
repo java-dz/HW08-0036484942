@@ -21,29 +21,29 @@ import hr.fer.zemris.java.simplecomp.models.InstructionArgument;
  */
 public class InstrJumpIfTrue extends InstrJump {
 
-	/**
-	 * Constructs an instance of {@code InstrJumpIfTrue} with the specified
-	 * {@link InstructionArgument arguments}.
-	 * <p>
-	 * Throws an {@linkplain IllegalArgumentException} if the number of
-	 * arguments is different from <tt>1</tt> or the argument is not a
-	 * number (location).
-	 * 
-	 * @param arguments arguments of this instruction
-	 * @throws IllegalArgumentException if argument size or number is invalid
-	 */
-	public InstrJumpIfTrue(List<InstructionArgument> arguments) {
-		super(arguments);
-	}
+    /**
+     * Constructs an instance of {@code InstrJumpIfTrue} with the specified
+     * {@link InstructionArgument arguments}.
+     * <p>
+     * Throws an {@linkplain IllegalArgumentException} if the number of
+     * arguments is different from <tt>1</tt> or the argument is not a
+     * number (location).
+     *
+     * @param arguments arguments of this instruction
+     * @throws IllegalArgumentException if argument size or number is invalid
+     */
+    public InstrJumpIfTrue(List<InstructionArgument> arguments) {
+        super(arguments);
+    }
 
-	@Override
-	public boolean execute(Computer computer) {
-		boolean flag = computer.getRegisters().getFlag();
-		if (flag) {
-			super.execute(computer);
-		}
-		
-		return false;
-	}
+    @Override
+    public boolean execute(Computer computer) {
+        boolean flag = computer.getRegisters().getFlag();
+        if (flag) {
+            super.execute(computer);
+        }
+
+        return false;
+    }
 
 }

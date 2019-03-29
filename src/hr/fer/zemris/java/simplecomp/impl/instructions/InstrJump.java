@@ -19,35 +19,35 @@ import hr.fer.zemris.java.simplecomp.models.InstructionArgument;
  * @see InstrJumpIfTrue
  */
 public class InstrJump extends AbstractInstruction {
-	
-	/** The memory location to which the program counter is to be set to. */
-	private int memoryLocation;
 
-	/**
-	 * Constructs an instance of {@code InstrJump} with the specified
-	 * {@link InstructionArgument arguments}.
-	 * <p>
-	 * Throws an {@linkplain IllegalArgumentException} if the number of
-	 * arguments is different from <tt>1</tt> or the argument is not a
-	 * number (location).
-	 * 
-	 * @param arguments arguments of this instruction
-	 * @throws IllegalArgumentException if argument size or number is invalid
-	 */
-	public InstrJump(List<InstructionArgument> arguments) {
-		super("Jump");
-		checkSize(arguments, 1);
-		
-		checkNumber(arguments.get(0), 0);
-		
-		memoryLocation = (Integer) arguments.get(0).getValue();
-	}
-	
-	@Override
-	public boolean execute(Computer computer) {
-		computer.getRegisters().setProgramCounter(memoryLocation);
-		
-		return false;
-	}
+    /** The memory location to which the program counter is to be set to. */
+    private int memoryLocation;
+
+    /**
+     * Constructs an instance of {@code InstrJump} with the specified
+     * {@link InstructionArgument arguments}.
+     * <p>
+     * Throws an {@linkplain IllegalArgumentException} if the number of
+     * arguments is different from <tt>1</tt> or the argument is not a
+     * number (location).
+     *
+     * @param arguments arguments of this instruction
+     * @throws IllegalArgumentException if argument size or number is invalid
+     */
+    public InstrJump(List<InstructionArgument> arguments) {
+        super("Jump");
+        checkSize(arguments, 1);
+
+        checkNumber(arguments.get(0), 0);
+
+        memoryLocation = (Integer) arguments.get(0).getValue();
+    }
+
+    @Override
+    public boolean execute(Computer computer) {
+        computer.getRegisters().setProgramCounter(memoryLocation);
+
+        return false;
+    }
 
 }
